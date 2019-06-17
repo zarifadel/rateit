@@ -34,12 +34,14 @@
         </div>
         <main class="mdl-layout__content">
           <div class="page-content">
-
-            {% for char in user_data  %}
               
-              <h1>{{forloop.counter0}}  {{ char }} </h1>
+              
 
-            {% endfor %}
+              {% block register %}
+
+              <h1> {{ user_data }} </h1>
+              {% endblock %}
+
             
           </div>
         </main>

@@ -2,12 +2,50 @@
 {% extends 'index.html' %}
 
 
-{% block register %}
 
+{% block register %}
     <div class="mdl-grid">
         <div class="mdl-cell">
-                registeration form goes here
+                <form action="/register/" method="POST">
+                    <!-- cross site request forgery -->
+                    {% csrf_token %}
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <input class="mdl-textfield__input" name="name" type="text" id="sample1">
+                        <label class="mdl-textfield__label" for="sample1">Business Name</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <label class="mdl-textfield__label"  for="sample1">Business Name</label>
+                        <select class="mdl-textfield__input" name="_type" type="select" id="sample1">
+                            <option class="mdl-textfield__label" for="sample1">Business Name</option>
+                            <option class="mdl-textfield__label" value="p" selected> Private </option>
+                            <option class="mdl-textfield__label" value="n" > NGO </option>
+                            <option class="mdl-textfield__label" value="g"> Government </option>
+                        </select>
+                        
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <textarea class="mdl-textfield__input" name="address" type="text" rows= "3" id="sample5" ></textarea>
+                        <label class="mdl-textfield__label" for="sample5">Business Address</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield">
+                        <select name="services" multiple>
+                            {% for service in services  %}
+
+                                <option value="{{service.id}}"> {{service.service}}  </option>
+
+                            {% endfor %}
+                        </select>
+                        
+                    </div>
+                    <div>
+                        <button class="mdl-button mdl-js-button mdl-button--raised" type="submit">
+                            Register
+                        </button>
+                    </div>
+
+
+                </form>
         </div>
     </div>
-
 {% endblock %}
