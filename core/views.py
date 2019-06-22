@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from registration.models import Business
 
 # Create your views here.
 
 # home page view
 
 def home(request):
-    
-    user_data = 'User is: ' + request.GET['user']
 
-    return render(request, 'index.html', context={'user_data': user_data, 'iterations':list(range(3))})
+    businesses = Business.objects.all()
+
+    return render(request, 'index.html', context={'businesses': businesses})

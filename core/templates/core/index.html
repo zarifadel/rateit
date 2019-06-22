@@ -36,13 +36,40 @@
           <div class="page-content">
               
               
+              
 
               {% block register %}
 
-              <h1> {{ user_data }} </h1>
+                <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+                    <thead>
+                      <tr>
+                        <th class="mdl-data-table__cell--non-numeric">Business</th>
+                        <th>Type</th>
+                        <th>Services</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for business in businesses %}
+                      <tr>
+                        <td class="mdl-data-table__cell--non-numeric">{{ business.name }}</td>
+                        <td>{{business.b_type}}</td>
+                        <td>
+                          
+                          {% for service in business.services.all %}
+                            {{service.service}} <br>
+                          {% endfor %}
+
+                        </td>
+                      </tr>
+
+                      {% endfor %}
+                    </tbody>
+                  </table>
+            
+                
               {% endblock %}
 
-            
+
           </div>
         </main>
       </div>
