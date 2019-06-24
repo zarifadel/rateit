@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Service, Business
 import json
 # Create your views here.
@@ -12,7 +12,7 @@ def register(request):
     services = Service.objects.all()
 
     if request.method == 'GET':
-        return render(request, 'registration.html', context={'services': services})
+        return render(request, 'registration.html', context={'services': services, 'editing':False})
     else:
 
         name = request.POST.get('name')
@@ -25,3 +25,24 @@ def register(request):
 
         for service in services:
             business.services.add(int(service))
+
+        return HttpResponseRedirect('/')
+
+def update(request):
+
+    id = request.GET.get('id')
+
+    business = Business.objects.get(id=int(id))
+
+    types = business.TYPE_CHOICES
+
+    services = Service.objects.all()
+
+    context = {
+        'business': business,
+        'editing': True,
+        'types': types,
+        'services': services
+    }
+
+    return render(request, 'registration.html', context=context)

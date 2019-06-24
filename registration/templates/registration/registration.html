@@ -4,36 +4,71 @@
 
 
 {% block register %}
-    <div class="mdl-grid">
+    <div class="mdl-grid rateit-grid-ctn">
         <div class="mdl-cell">
-                <form action="/register/" method="POST">
+                {% if not editing %}
+                    <form action="/register/" method="POST">
+                {% else %}
+                    <form action="/update/" method="POST">
+                {% endif %}
                     <!-- cross site request forgery -->
                     {% csrf_token %}
                     <div class="mdl-textfield mdl-js-textfield">
-                        <input class="mdl-textfield__input" name="name" type="text" id="sample1">
+                        {% if editing %}
+                            <input class="mdl-textfield__input" name="name" type="text" id="sample1" value="{{business.name}}">
+                        {% else %}
+                            <input class="mdl-textfield__input" name="name" type="text" id="sample1">
+                        {% endif %}
                         <label class="mdl-textfield__label" for="sample1">Business Name</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield">
                         <label class="mdl-textfield__label"  for="sample1">Business Name</label>
                         <select class="mdl-textfield__input" name="_type" type="select" id="sample1">
-                            <option class="mdl-textfield__label" for="sample1">Business Name</option>
-                            <option class="mdl-textfield__label" value="p" selected> Private </option>
-                            <option class="mdl-textfield__label" value="n" > NGO </option>
-                            <option class="mdl-textfield__label" value="g"> Government </option>
+                                <!-- <option class="mdl-textfield__label" for="sample1">Business Name</option> -->
+                            {% if editing %}
+                                {% for type in types %}
+
+                                    {% if type.0 == business.b_type %}
+                                    <option class="mdl-textfield__label" value="{{type.0}}" selected="selected"> {{type.1}} </option>
+                                    {% else %}
+                                    <option class="mdl-textfield__label" value="{{type.0}}"> {{type.1}} </option>
+                                    {% endif %}
+
+                                {% endfor %}
+                            {% else %}
+                                <option class="mdl-textfield__label" value="p" > Private </option>
+                                <option class="mdl-textfield__label" value="n" > NGO </option>
+                                <option class="mdl-textfield__label" value="g"> Government </option>
+                            {% endif %}
                         </select>
                         
                     </div>
                     <div class="mdl-textfield mdl-js-textfield">
-                        <textarea class="mdl-textfield__input" name="address" type="text" rows= "3" id="sample5" ></textarea>
+                        {% if editing %}
+                        <textarea class="mdl-textfield__input" name="address" type="text" rows= "3" id="sample5" >
+                            {{business.address}}
+                        </textarea>
+                        {% else %}
+                        <textarea class="mdl-textfield__input" name="address" type="text" rows= "3" id="sample5" >
+                        </textarea>
+                        {% endif %}
                         <label class="mdl-textfield__label" for="sample5">Business Address</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield">
                         <select name="services" multiple>
                             {% for service in services  %}
-
-                                <option value="{{service.id}}"> {{service.service}}  </option>
-
+                                {% if editing %}
+                                    {% for busines_service in business.services.all %}
+                                        {% if service.service == business_service.service %}
+                                            <option value="{{service.id}}" selected> {{service.service}}  </option>
+                                        {% else  %}
+                                            <option value="{{service.id}}"> {{service.service}}  </option>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="{{service.id}}"> {{service.service}}  </option>
+                                {% endif %}
                             {% endfor %}
                         </select>
                         
