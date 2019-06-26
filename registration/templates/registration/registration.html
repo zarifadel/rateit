@@ -9,10 +9,11 @@
                 {% if not editing %}
                     <form action="/register/" method="POST">
                 {% else %}
-                    <form action="/update/" method="POST">
+                    <form action="/register/update/" method="POST">
                 {% endif %}
                     <!-- cross site request forgery -->
                     {% csrf_token %}
+                    <input name="id" value="{{business.id}}" type="hidden">
                     <div class="mdl-textfield mdl-js-textfield">
                         {% if editing %}
                             <input class="mdl-textfield__input" name="name" type="text" id="sample1" value="{{business.name}}">
@@ -23,7 +24,7 @@
                     </div>
                     <div class="mdl-textfield mdl-js-textfield">
                         <label class="mdl-textfield__label"  for="sample1">Business Name</label>
-                        <select class="mdl-textfield__input" name="_type" type="select" id="sample1">
+                        <select class="mdl-textfield__input" name="b_type" type="select" id="sample1">
                                 <!-- <option class="mdl-textfield__label" for="sample1">Business Name</option> -->
                             {% if editing %}
                                 {% for type in types %}
@@ -57,19 +58,23 @@
 
                     <div class="mdl-textfield mdl-js-textfield">
                         <select name="services" multiple>
-                            {% for service in services  %}
+                            
                                 {% if editing %}
-                                    {% for busines_service in business.services.all %}
-                                        {% if service.service == business_service.service %}
-                                            <option value="{{service.id}}" selected> {{service.service}}  </option>
-                                        {% else  %}
-                                            <option value="{{service.id}}"> {{service.service}}  </option>
-                                        {% endif %}
+                                    {% for service in services  %}
+
+                                            {% if service.id in business_services  %}
+                                                <option value="{{service.id}}" selected> {{service.service}}  </option>
+                                            {% else  %}
+                                                <option value="{{service.id}}"> {{service.service}}  </option>
+                                            {% endif %}
+
                                     {% endfor %}
                                 {% else %}
-                                    <option value="{{service.id}}"> {{service.service}}  </option>
+                                    {% for service in services  %}
+                                        <option value="{{service.id}}"> {{service.service}}  </option>
+                                    {% endfor %}
                                 {% endif %}
-                            {% endfor %}
+                            
                         </select>
                         
                     </div>

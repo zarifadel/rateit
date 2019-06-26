@@ -30,19 +30,45 @@ def register(request):
 
 def update(request):
 
-    id = request.GET.get('id')
+    if request.method == 'GET':
+        id = request.GET.get('id')
 
-    business = Business.objects.get(id=int(id))
+        business = Business.objects.get(id=int(id))
 
-    types = business.TYPE_CHOICES
+        types = business.TYPE_CHOICES
 
-    services = Service.objects.all()
+        services = Service.objects.all()
 
-    context = {
-        'business': business,
-        'editing': True,
-        'types': types,
-        'services': services
-    }
+        context = {
+            'business': business,
+            'editing': True,
+            'types': types,
+            'services': services,
+            'business_services': business.services.all().values_list('id', flat=True)
+        }
 
-    return render(request, 'registration.html', context=context)
+        return render(request, 'registration.html', context=context)
+    elif request.method == 'POST':
+        
+
+        services = request.POST.getlist('services')
+        all_fileds = request.POST.dict()
+        del all_fileds['services']
+        del all_fileds['csrfmiddlewaretoken']
+
+        
+        print(all_fileds)
+        business, created = Business.objects.update_or_create(id=request.POST.get('id'), defaults=all_fileds)
+
+        for service in services:
+            if not business.services.all().filter(id=service).exists():
+                business.services.add(service)
+
+        
+
+
+
+
+
+
+        
